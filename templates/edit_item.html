@@ -1,131 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <!-- Required meta tags -->
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends "main.html" %}
 
-  <!--Bootstrap Styles-->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+{% block title %}Edit Item{% endblock %}
 
-  <link href='../css/styles.css' rel='stylesheet' type='text/css'/>
+{% block header %}
+  <h1 class="display-5 text-center text-white font-weight-bold p-0 m-0">Edit Item</h1>
+{% endblock %}
 
-  <title>Edit Item</title>
-</head>
-<body>
-  <div class="container">
-    <!-- Navbar -->
-    <div class="row">
-      <div class="col">
-        <nav class="navbar navbar-light ligh_gray-bg">
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-          </button>
+{% block content %}
+  <hr>
 
-          <a class="navbar-brand text-secondary font-weight-bold" href="#">Home</a>
-          <a class="btn bg-danger text-white font-weight-bold" role="button" href="#">Login</a>
-
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="#">Soccer</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Basketball</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Baseball</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Frisbee</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Snowboarding</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Rock</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Foosball</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Skating</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Hockey</a>
-              </li>
-            </ul>
+  <!-- Editing form -->
+  <div class="row mt-3 align-items-center">
+    <div class="col-auto">
+      <form>
+        <div class="row mb-3">
+          <div class="col">
+            <label for="title" class="dark_gray-font font-weight-bold">Title</label>
+            <input type="text" class="form-control" name="title" id="title" placeholder="placeholder" value="value" required>
           </div>
-        </nav>
-      </div>
-    </div>
-
-    <!-- Header -->
-    <div class="row bg-dark px-0 mx-0">
-      <div class="col p-3">
-        <h1 class="display-5 text-center text-white font-weight-bold p-0 m-0">Edit Item</h1>
-      </div>
-    </div>
-
-    <hr>
-
-    <!-- Editing form -->
-    <div class="row mt-3 mb-4 align-items-center">
-      <div class="col-auto">
-        <form>
-          <div class="row mb-3">
-            <div class="col">
-              <label for="title" class="dark_gray-font font-weight-bold">Title</label>
-              <input type="text" class="form-control" name="title" id="title" placeholder="placeholder" value="value" required>
-            </div>
+        </div>
+        <div class="row my-3">
+          <div class="col">
+            <label for="description" class="dark_gray-font font-weight-bold">Description</label>
+            <textarea class="form-control" name="description" id="description" rows="4" cols="50" placeholder="placeholder" required>value</textarea>
           </div>
-          <div class="row my-3">
-            <div class="col">
-              <label for="description" class="dark_gray-font font-weight-bold">Description</label>
-              <textarea class="form-control" name="description" id="description" rows="4" cols="50" placeholder="placeholder" required>value</textarea>
-            </div>
+        </div>
+        <div class="row my-3">
+          <div class="col-auto">
+            <label for="category"
+                   class="dark_gray-font font-weight-bold">Category</label>
+            <select class="form-control" name="category" id="category" required>
+              <option>Soccer</option>
+              <option>Basketball</option>
+              <option>Baseball</option>
+              <option selected>Frisbee</option>
+              <option>Snowboarding</option>
+              <option>Rock Climbing</option>
+              <option>Foosball</option>
+              <option>Skating</option>
+              <option>Hockey</option>
+            </select>
           </div>
-          <div class="row my-3">
-            <div class="col-auto">
-              <label for="category"
-                     class="dark_gray-font font-weight-bold">Category</label>
-              <select class="form-control" name="category" id="category" required>
-                <option>Soccer</option>
-                <option>Basketball</option>
-                <option>Baseball</option>
-                <option selected>Frisbee</option>
-                <option>Snowboarding</option>
-                <option>Rock Climbing</option>
-                <option>Foosball</option>
-                <option>Skating</option>
-                <option>Hockey</option>
-              </select>
-            </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-auto">
+            <button type="submit" class="btn orange-bg text-white font-weight-bold mt-2 button-width">Submit</button>
+            <a class="btn orange-bg text-white font-weight-bold mt-2 button-width" href="#">Cancel</a>
           </div>
-          <div class="row mt-2">
-            <div class="col-auto">
-              <button type="submit" class="btn orange-bg text-white font-weight-bold mt-2 button-width">Submit</button>
-              <a class="btn orange-bg text-white font-weight-bold mt-2 button-width" href="#">Cancel</a>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <hr>
-
-    <!-- Footer -->
-    <div class="row px-0 mx-0 mt-3">
-      <div class="col">
-        <p class="text-muted pl-3">&copy; Nanodegree Student Project</p>
-      </div>
+        </div>
+      </form>
     </div>
   </div>
-
-  <!-- Bootstrap JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-</body>
-</html>
+{% endblock %}

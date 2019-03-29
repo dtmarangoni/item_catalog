@@ -1,339 +1,262 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <!-- Required meta tags -->
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends "main.html" %}
 
-  <!--Bootstrap Styles-->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+{% block title %}Item Catalog{% endblock %}
 
-  <link href='../css/styles.css' rel='stylesheet' type='text/css'/>
+{% block header %}
+  <h1 class="display-4 text-center text-white font-weight-bold p-0 m-0">Item Catalog</h1>
+{% endblock %}
 
-  <title>Item Catalog</title>
-</head>
-<body>
-  <div class="container">
-    <!-- Navbar -->
-    <div class="row">
-      <div class="col">
-        <nav class="navbar navbar-light ligh_gray-bg">
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-          </button>
-
-          <a class="navbar-brand text-secondary font-weight-bold" href="#">Home</a>
-          <a class="btn bg-danger text-white font-weight-bold" role="button" href="#">Login</a>
-
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="#">Soccer</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Basketball</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Baseball</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Frisbee</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Snowboarding</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Rock</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Foosball</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Skating</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Hockey</a>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </div>
+{% block content %}
+  <!-- Header images -->
+  <div class="row bg-dark pt-1 px-0 mx-0">
+    <div class="col-4">
+      <figure class="figure">
+        <img src="{{ url_for('static', filename='keith-johnston-216347-unsplash.jpg') }}" class="figure-img img-fluid rounded" alt="">
+        <figcaption class="figure-caption text-center text-white">Photo by
+            Keith Johnston on Unsplash</figcaption>
+      </figure>
     </div>
-
-    <!-- Header -->
-    <div class="row bg-dark px-0 mx-0">
-      <div class="col pb-4 pt-2">
-        <h1 class="display-4 text-center text-white font-weight-bold p-0 m-0">Item Catalog</h1>
-      </div>
+    <div class="col-4">
+      <figure class="figure">
+        <img src="{{ url_for('static', filename='razvan-chisu-623792-unsplash.jpg') }}" class="figure-img img-fluid rounded" alt="">
+        <figcaption class="figure-caption text-center text-white">Photo by
+            Razvan Chisu on Unsplash</figcaption>
+      </figure>
     </div>
-
-    <!-- Header images -->
-    <div class="row bg-dark px-0 mx-0">
-      <div class="col-4">
-        <figure class="figure">
-          <img src="../images/keith-johnston-216347-unsplash.jpg" class="figure-img img-fluid rounded" alt="">
-          <figcaption class="figure-caption text-center text-white">Photo by
-              Keith Johnston on Unsplash</figcaption>
-        </figure>
-      </div>
-      <div class="col-4">
-        <figure class="figure">
-          <img src="../images/razvan-chisu-623792-unsplash.jpg" class="figure-img img-fluid rounded" alt="">
-          <figcaption class="figure-caption text-center text-white">Photo by
-              Razvan Chisu on Unsplash</figcaption>
-        </figure>
-      </div>
-      <div class="col-4">
-        <figure class="figure">
-          <img src="../images/tirza-van-dijk-72373-unsplash.jpg" class="figure-img img-fluid rounded" alt="">
-          <figcaption class="figure-caption text-center text-white">Photo by
-              Tirza van Dijk on Unsplash</figcaption>
-        </figure>
-      </div>
+    <div class="col-4">
+      <figure class="figure">
+        <img src="{{ url_for('static', filename='tirza-van-dijk-72373-unsplash.jpg') }}" class="figure-img img-fluid rounded" alt="">
+        <figcaption class="figure-caption text-center text-white">Photo by
+            Tirza van Dijk on Unsplash</figcaption>
+      </figure>
     </div>
+  </div>
 
-    <hr>
+  <hr>
 
-    <!-- Catalog items header -->
-    <div class="row bg-light px-0 mx-0 mt-3 justify-content-between">
-      <div class="col-auto m-3">
-        <h4 class="display-5 dark_gray-font">Latest Added Items</h4>
-      </div>
-      <div class="col-auto m-3">
-        <button type="button" class="btn text-white font-weight-bold orange-bg">Add</button>
-      </div>
+  <!-- Catalog items header -->
+  <div class="row bg-light px-0 mx-0 mt-3 justify-content-between">
+    <div class="col-auto m-3">
+      <h4 class="display-5 dark_gray-font">Latest Added Items</h4>
     </div>
+    <div class="col-auto m-3">
+      <button type="button" class="btn text-white font-weight-bold orange-bg">Add</button>
+    </div>
+  </div>
 
-    <!-- Card group with latest added items -->
-    <div class="row bg-light justify-content-left px-0 mx-0 mb-4">
-      <div class="col-auto">
-        <div class="card-columns">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title text-danger">Soccer</h5>
-              <p class="card-text text-muted">(Category Name)</p>
-            </div>
-            <div class="card-footer m-0 p-0 text-center medium_gray-bg">
-              <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Edit
-                </button>
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Delete</button>
-              </div>
+  <!-- Card group with latest added items -->
+  <div class="row bg-light justify-content-left px-0 mx-0">
+    <div class="col-auto">
+      <div class="card-columns">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-danger">Soccer</h5>
+            <p class="card-text text-muted">(Category Name)</p>
+          </div>
+          <div class="card-footer m-0 p-0 text-center medium_gray-bg">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Edit
+              </button>
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Delete</button>
             </div>
           </div>
+        </div>
 
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title text-danger">Soccer</h5>
-              <p class="card-text text-muted">(Category Name)</p>
-            </div>
-            <div class="card-footer m-0 p-0 text-center medium_gray-bg">
-              <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Edit
-                </button>
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Delete</button>
-              </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-danger">Soccer</h5>
+            <p class="card-text text-muted">(Category Name)</p>
+          </div>
+          <div class="card-footer m-0 p-0 text-center medium_gray-bg">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Edit
+              </button>
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Delete</button>
             </div>
           </div>
+        </div>
 
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title text-danger">Soccer</h5>
-              <p class="card-text text-muted">(Category Name)</p>
-            </div>
-            <div class="card-footer m-0 p-0 text-center medium_gray-bg">
-              <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Edit
-                </button>
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Delete</button>
-              </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-danger">Soccer</h5>
+            <p class="card-text text-muted">(Category Name)</p>
+          </div>
+          <div class="card-footer m-0 p-0 text-center medium_gray-bg">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Edit
+              </button>
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Delete</button>
             </div>
           </div>
+        </div>
 
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title text-danger">Soccer</h5>
-              <p class="card-text text-muted">(Category Name)</p>
-            </div>
-            <div class="card-footer m-0 p-0 text-center medium_gray-bg">
-              <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Edit
-                </button>
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Delete</button>
-              </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-danger">Soccer</h5>
+            <p class="card-text text-muted">(Category Name)</p>
+          </div>
+          <div class="card-footer m-0 p-0 text-center medium_gray-bg">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Edit
+              </button>
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Delete</button>
             </div>
           </div>
+        </div>
 
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title text-danger">Soccer</h5>
-              <p class="card-text text-muted">(Category Name)</p>
-            </div>
-            <div class="card-footer m-0 p-0 text-center medium_gray-bg">
-              <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Edit
-                </button>
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Delete</button>
-              </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-danger">Soccer</h5>
+            <p class="card-text text-muted">(Category Name)</p>
+          </div>
+          <div class="card-footer m-0 p-0 text-center medium_gray-bg">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Edit
+              </button>
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Delete</button>
             </div>
           </div>
+        </div>
 
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title text-danger">Soccer</h5>
-              <p class="card-text text-muted">(Category Name)</p>
-            </div>
-            <div class="card-footer m-0 p-0 text-center medium_gray-bg">
-              <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Edit
-                </button>
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Delete</button>
-              </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-danger">Soccer</h5>
+            <p class="card-text text-muted">(Category Name)</p>
+          </div>
+          <div class="card-footer m-0 p-0 text-center medium_gray-bg">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Edit
+              </button>
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Delete</button>
             </div>
           </div>
+        </div>
 
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title text-danger">Soccer</h5>
-              <p class="card-text text-muted">(Category Name)</p>
-            </div>
-            <div class="card-footer m-0 p-0 text-center medium_gray-bg">
-              <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Edit
-                </button>
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Delete</button>
-              </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-danger">Soccer</h5>
+            <p class="card-text text-muted">(Category Name)</p>
+          </div>
+          <div class="card-footer m-0 p-0 text-center medium_gray-bg">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Edit
+              </button>
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Delete</button>
             </div>
           </div>
+        </div>
 
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title text-danger">Soccer</h5>
-              <p class="card-text text-muted">(Category Name)</p>
-            </div>
-            <div class="card-footer m-0 p-0 text-center medium_gray-bg">
-              <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Edit
-                </button>
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Delete</button>
-              </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-danger">Soccer</h5>
+            <p class="card-text text-muted">(Category Name)</p>
+          </div>
+          <div class="card-footer m-0 p-0 text-center medium_gray-bg">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Edit
+              </button>
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Delete</button>
             </div>
           </div>
+        </div>
 
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title text-danger">Soccer</h5>
-              <p class="card-text text-muted">(Category Name)</p>
-            </div>
-            <div class="card-footer m-0 p-0 text-center medium_gray-bg">
-              <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Edit
-                </button>
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Delete</button>
-              </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-danger">Soccer</h5>
+            <p class="card-text text-muted">(Category Name)</p>
+          </div>
+          <div class="card-footer m-0 p-0 text-center medium_gray-bg">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Edit
+              </button>
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Delete</button>
             </div>
           </div>
+        </div>
 
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title text-danger">Soccer</h5>
-              <p class="card-text text-muted">(Category Name)</p>
-            </div>
-            <div class="card-footer m-0 p-0 text-center medium_gray-bg">
-              <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Edit
-                </button>
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Delete</button>
-              </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-danger">Soccer</h5>
+            <p class="card-text text-muted">(Category Name)</p>
+          </div>
+          <div class="card-footer m-0 p-0 text-center medium_gray-bg">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Edit
+              </button>
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Delete</button>
             </div>
           </div>
+        </div>
 
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title text-danger">Soccer</h5>
-              <p class="card-text text-muted">(Category Name)</p>
-            </div>
-            <div class="card-footer m-0 p-0 text-center medium_gray-bg">
-              <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Edit
-                </button>
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Delete</button>
-              </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-danger">Soccer</h5>
+            <p class="card-text text-muted">(Category Name)</p>
+          </div>
+          <div class="card-footer m-0 p-0 text-center medium_gray-bg">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Edit
+              </button>
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Delete</button>
             </div>
           </div>
+        </div>
 
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title text-danger">Soccer</h5>
-              <p class="card-text text-muted">(Category Name)</p>
-            </div>
-            <div class="card-footer m-0 p-0 text-center medium_gray-bg">
-              <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Edit
-                </button>
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Delete</button>
-              </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-danger">Soccer</h5>
+            <p class="card-text text-muted">(Category Name)</p>
+          </div>
+          <div class="card-footer m-0 p-0 text-center medium_gray-bg">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Edit
+              </button>
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Delete</button>
             </div>
           </div>
+        </div>
 
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title text-danger">Soccer</h5>
-              <p class="card-text text-muted">(Category Name)</p>
-            </div>
-            <div class="card-footer m-0 p-0 text-center medium_gray-bg">
-              <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Edit
-                </button>
-                <button type="button"
-                        class="btn btn-link text-white font-weight-bold">Delete</button>
-              </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-danger">Soccer</h5>
+            <p class="card-text text-muted">(Category Name)</p>
+          </div>
+          <div class="card-footer m-0 p-0 text-center medium_gray-bg">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Edit
+              </button>
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Delete</button>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <hr>
-
-    <!-- Footer -->
-    <div class="row px-0 mx-0 mt-3">
-      <div class="col">
-        <p class="text-muted pl-3">&copy; Nanodegree Student Project</p>
-      </div>
-    </div>
   </div>
 
-
-  <!-- Bootstrap JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-</body>
-</html>
+{% endblock %}
