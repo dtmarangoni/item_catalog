@@ -13,16 +13,40 @@ def catalog():
     return render_template('catalog.html')
 
 
+# Page for showing items from a specific category
+@app.route('/catalog/<string:category>')
+def category(category):
+    return render_template('category.html')
+
+
 # Page for showing item information
 @app.route('/catalog/<string:category>/<string:item>')
 def item(category, item):
     return render_template('item.html')
 
 
+# Page for add an item
+@app.route('/catalog/<string:category>/add')
+def add_item(category):
+    return render_template('add_item.html')
+
+
 # Page for editing an item
 @app.route('/catalog/<string:category>/<string:item>/edit')
 def edit_item(category, item):
     return render_template('edit_item.html')
+
+
+# Page for deleting an item
+@app.route('/catalog/<string:category>/<string:item>/delete')
+def delete_item(category, item):
+    return render_template('delete_item.html')
+
+
+# Login page
+@app.route('/catalog/login')
+def login():
+    return render_template('login.html')
 
 
 if __name__ == '__main__':

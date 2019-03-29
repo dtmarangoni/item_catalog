@@ -1,0 +1,31 @@
+{% extends "main.html" %}
+
+{% block title %}Delete Item{% endblock %}
+
+{% block header %}
+  <h1 class="display-5 text-center text-white font-weight-bold p-0 m-0">Delete Item</h1>
+{% endblock %}
+
+{% block content %}
+  <hr>
+
+  <!-- Deleting confirmation -->
+  <div class="row mt-3 align-items-center">
+    <div class="col-auto">
+      <div class="card">
+        <h5 class="card-header text-danger ligh_gray-bg">Soccer</h5>
+        <div class="card-body">
+          <p class="card-text dark_gray-font font-weight-bold">Are you sure you want to delete?</p>
+        </div>
+        <div class="card-footer m-0 p-0 text-center orange-bg">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Delete or Cancel">
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Delete</button>
+              <button type="button"
+                      class="btn btn-link text-white font-weight-bold">Cancel</button>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

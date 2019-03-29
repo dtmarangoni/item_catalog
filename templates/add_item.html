@@ -1,9 +1,9 @@
 {% extends "main.html" %}
 
-{% block title %}Edit Item{% endblock %}
+{% block title %}Add Item{% endblock %}
 
 {% block header %}
-  <h1 class="display-5 text-center text-white font-weight-bold p-0 m-0">Edit Item</h1>
+  <h1 class="display-5 text-center text-white font-weight-bold p-0 m-0">Add Item</h1>
 {% endblock %}
 
 {% block content %}
@@ -16,24 +16,24 @@
         <div class="row mb-3">
           <div class="col">
             <label for="title" class="dark_gray-font font-weight-bold">Title</label>
-            <input type="text" class="form-control" name="title" id="title" value="value" required>
+            <input type="text" class="form-control" name="title" id="title" required>
           </div>
         </div>
         <div class="row my-3">
           <div class="col">
             <label for="description" class="dark_gray-font font-weight-bold">Description</label>
-            <textarea class="form-control" name="description" id="description" rows="4" cols="50" required>value</textarea>
+            <textarea class="form-control" name="description" id="description" rows="4" cols="50" required></textarea>
           </div>
         </div>
         <div class="row my-3">
           <div class="col-auto">
-            <label for="category"
-                   class="dark_gray-font font-weight-bold">Category</label>
+            <label for="category" class="dark_gray-font font-weight-bold">Category</label>
             <select class="form-control" name="category" id="category" required>
+              <option value="" selected disabled>Select</option>
               <option>Soccer</option>
               <option>Basketball</option>
               <option>Baseball</option>
-              <option selected>Frisbee</option>
+              <option>Frisbee</option>
               <option>Snowboarding</option>
               <option>Rock Climbing</option>
               <option>Foosball</option>
@@ -44,7 +44,7 @@
         </div>
         <div class="row mt-2">
           <div class="col-auto">
-            <button type="submit" class="btn orange-bg text-white font-weight-bold mt-2 button-width">Edit</button>
+            <button type="submit" class="btn orange-bg text-white font-weight-bold mt-2 button-width">Add</button>
             <a class="btn orange-bg text-white font-weight-bold mt-2 button-width" href="#">Cancel</a>
           </div>
         </div>

@@ -1,0 +1,42 @@
+{% extends "main.html" %}
+
+{% block title %}Item Categories{% endblock %}
+
+{% block header %}
+  <h1 class="display-5 text-center text-white font-weight-bold p-0 m-0">Categories</h1>
+{% endblock %}
+
+{% block content %}
+
+  <hr>
+
+  <!-- Catalog items header -->
+  <div class="row bg-light px-0 mx-0 mt-3 justify-content-between">
+    <div class="col-auto m-3">
+      <h4 class="display-5 dark_gray-font">Category</h4>
+    </div>
+    <div class="col-auto m-3">
+      <button type="button" class="btn text-white font-weight-bold orange-bg">Add</button>
+    </div>
+  </div>
+
+  <!-- Card group with added items from a specific category -->
+  <div class="row bg-light justify-content-left px-0 mx-0">
+    <div class="col">
+      <div class="card-columns">
+        <div class="card">
+          <div class="card-body">
+            <p class="card-text text-center text-danger font-weight-bold">Soccer</p>
+          </div>
+          <div class="card-footer m-0 p-0 text-center medium_gray-bg">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
+              <button type="button" class="btn btn-link text-white font-weight-bold">Edit</button>
+              <button type="button" class="btn btn-link text-white font-weight-bold">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
