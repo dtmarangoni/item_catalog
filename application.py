@@ -16,7 +16,7 @@ def catalog():
 # Page for showing items from a specific category
 @app.route('/catalog/<string:category>')
 def category(category):
-    return render_template('category.html')
+    return render_template('category.html', category=category)
 
 
 # Page for showing item information
@@ -28,13 +28,13 @@ def item(category, item):
 # Page for add an item
 @app.route('/catalog/<string:category>/add')
 def add_item(category):
-    return render_template('add_item.html')
+    return render_template('add_item.html', category=category)
 
 
 # Page for editing an item
 @app.route('/catalog/<string:category>/<string:item>/edit')
 def edit_item(category, item):
-    return render_template('edit_item.html')
+    return render_template('edit_item.html', category=category)
 
 
 # Page for deleting an item

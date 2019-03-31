@@ -13,10 +13,10 @@
   <!-- Catalog items header -->
   <div class="row bg-light px-0 mx-0 mt-3 justify-content-between">
     <div class="col-auto m-3">
-      <h4 class="display-5 dark_gray-font">Category</h4>
+      <h4 class="display-5 dark_gray-font">{{category}}</h4>
     </div>
     <div class="col-auto m-3">
-      <button type="button" class="btn text-white font-weight-bold orange-bg">Add</button>
+      <a class="btn text-white font-weight-bold orange-bg" href="{{ url_for('add_item', category=category) }}">Add</a>
     </div>
   </div>
 

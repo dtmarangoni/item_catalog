@@ -3,7 +3,7 @@
 {% block meta_head %}
   <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-  <meta name="google-signin-client_id" content="337474816896-or731ejgbekirmhr3jfn3bdgdmcqo9hg.apps.googleusercontent.com">
+  <meta name="google-signin-client_id" content="GOOGLE CLIENT ID">
   <script src="https://apis.google.com/js/platform.js" async defer></script>
 {% endblock %}
 
@@ -32,7 +32,7 @@
       <script>
         window.fbAsyncInit = function() {
           FB.init({
-            appId      : '1195224613974568',
+            appId      : 'FACEBOOK APP ID',
             cookie     : true,    // enable cookies to allow the server to
                                   // access the session
             xfbml      : true,    // parse social plugins on this page
@@ -162,21 +162,18 @@
       <form>
         <div class="row mb-2">
           <div class="col">
-            <input type="text" class="form-control" id="username" placeholder="Username" required>
+            <input type="text" class="form-control" name="username" placeholder="Username" required>
           </div>
         </div>
         <div class="row mb-2">
           <div class="col">
-            <input type="password" class="form-control" id="password" placeholder="Password" required>
+            <input type="password" class="form-control" name="password" placeholder="Password" required>
           </div>
         </div>
         <div class="row justify-content-around">
           <div class="col-auto">
-            <button type="submit"
-                    class="btn text-white btn-danger font-weight-bold button-width-large mr-2 mt-2">Sign in</button>
-            <a
-                class="btn text-white orange-bg font-weight-bold button-width-large mt-2"
-               href="#">Sign up</a>
+            <button type="submit" class="btn text-white btn-danger font-weight-bold button-width-large mr-2 mt-2">Sign in</button>
+            <a class="btn text-white orange-bg font-weight-bold button-width-large mt-2" href="{{ url_for('new_user') }}">Sign up</a>
           </div>
         </div>
       </form>

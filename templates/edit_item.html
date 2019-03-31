@@ -33,7 +33,7 @@
               <option>Soccer</option>
               <option>Basketball</option>
               <option>Baseball</option>
-              <option selected>Frisbee</option>
+              <option>Frisbee</option>
               <option>Snowboarding</option>
               <option>Rock Climbing</option>
               <option>Foosball</option>
@@ -45,10 +45,22 @@
         <div class="row mt-2">
           <div class="col-auto">
             <button type="submit" class="btn orange-bg text-white font-weight-bold mt-2 button-width-normal">Edit</button>
-            <a class="btn orange-bg text-white font-weight-bold mt-2 button-width-normal" href="#">Cancel</a>
+            <a class="btn orange-bg text-white font-weight-bold mt-2 button-width-normal" href="javascript:history.back()">Cancel</a>
           </div>
         </div>
       </form>
     </div>
   </div>
+
+  <script type="text/javascript">
+    var cat = "{{category}}";
+    if (cat != "None") {
+      select_element("category", cat)
+    }
+
+    function select_element(id, value) {
+      var element = document.getElementById(id);
+      element.value = value;
+    }
+  </script>
 {% endblock %}

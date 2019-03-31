@@ -25,37 +25,38 @@
           <span class="navbar-toggler-icon"></span>
           </button>
 
-          <a class="navbar-brand text-secondary font-weight-bold" href="#">Home</a>
-          <a class="btn bg-danger text-white font-weight-bold" role="button" href="#" {% block hide_login_btn %}{% endblock %}>Login</a>
+          <a class="navbar-brand text-secondary font-weight-bold" href="{{ url_for('catalog') }}">Home</a>
+          <a class="btn bg-danger text-white font-weight-bold" role="button" href="{{ url_for('login') }}" {% block hide_login_btn %}{%
+             endblock %}>Login</a>
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
               <li class="nav-item">
-                <a class="nav-link" href="#">Soccer</a>
+                <a class="nav-link" href="{{ url_for('category', category='Soccer') }}">Soccer</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Basketball</a>
+                <a class="nav-link" href="{{ url_for('category', category='Basketball') }}">Basketball</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Baseball</a>
+                <a class="nav-link" href="{{ url_for('category', category='Baseball') }}">Baseball</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Frisbee</a>
+                <a class="nav-link" href="{{ url_for('category', category='Frisbee') }}">Frisbee</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Snowboarding</a>
+                <a class="nav-link" href="{{ url_for('category', category='Snowboarding') }}">Snowboarding</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Rock</a>
+                <a class="nav-link" href="{{ url_for('category', category='Rock') }}">Rock</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Foosball</a>
+                <a class="nav-link" href="{{ url_for('category', category='Foosball') }}">Foosball</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Skating</a>
+                <a class="nav-link" href="{{ url_for('category', category='Skating') }}">Skating</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Hockey</a>
+                <a class="nav-link" href="{{ url_for('category', category='Hockey') }}">Hockey</a>
               </li>
             </ul>
           </div>
@@ -64,8 +65,7 @@
     </div>
 
     <!-- Header -->
-    <div
-        class="row bg-dark align-items-center justify-content-center px-0 mx-0">
+    <div class="row bg-dark align-items-center justify-content-center px-0 mx-0">
       <div class="col-auto pb-3 pt-2">
         {% block header %}{% endblock %}
       </div>
