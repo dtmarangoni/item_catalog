@@ -1,0 +1,50 @@
+{% extends "main.html" %}
+
+{% block title %}Sign up{% endblock %}
+
+{% block header %}
+  <h1 class="display-5 text-center text-white font-weight-bold p-0 m-0">Sign up</h1>
+{% endblock %}
+
+{% block hide_login_btn %}hidden{% endblock %}
+
+{% block content %}
+  <hr>
+
+  <!-- Header -->
+  <div class="row justify-content-center my-3">
+    <div class="col-auto">
+      <h3 class="dark_gray-font">Create a new account</h3>
+    </div>
+  </div>
+
+  <!-- New user form -->
+  <div class="row align-items-center justify-content-center">
+    <div class="col-auto">
+      <form>
+        <div class="row mb-2">
+          <div class="col">
+            <input type="text" class="form-control" placeholder="Username" required>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col">
+            <input type="password" class="form-control" placeholder="Password" required>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col">
+            <input type="email" class="form-control" placeholder="email" required>
+          </div>
+        </div>
+        <div class="row justify-content-around">
+          <div class="col-auto">
+            <button type="submit" class="btn text-white btn-danger font-weight-bold button-width-large mr-2 mt-2">Submit</button>
+            <a class="btn text-white orange-bg font-weight-bold button-width-large mt-2" href="#">Cancel</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

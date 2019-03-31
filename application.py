@@ -49,6 +49,12 @@ def login():
     return render_template('login.html')
 
 
+# New user page
+@app.route('/catalog/new_user')
+def new_user():
+    return render_template('new_user.html')
+
+
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
     app.debug = True
