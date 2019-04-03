@@ -100,6 +100,10 @@ class Category(Base):
 
     @property
     def serialize(self):
+        """Send a JSON object in a serializable format.
+
+        Returns: the JSON object.
+        """
         return {
             'id': self.id,
             'name': self.name
@@ -118,6 +122,10 @@ class Item(Base):
 
     @property
     def serialize(self):
+        """Send a JSON object in a serializable format.
+
+        Returns: the JSON object.
+        """
         return {
             'id': self.id,
             'name': self.name,
@@ -136,4 +144,7 @@ def init_db():
 # When running this module from command line it will create the DB tables.
 # This is necessary for initial DB startup.
 if __name__ == '__main__':
+    """When running this module from command line it will create the DB tables.
+    This is necessary for initial DB startup.
+    """
     init_db()

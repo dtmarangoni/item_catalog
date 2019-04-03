@@ -53,6 +53,14 @@ def populate_db():
     db_session.add(item)
     db_session.commit()
 
+    category = db_session.query(Category).filter_by(name='Soccer').one()
+    item = Item(name='Socks',
+                description='Item of clothing worn on the feet and often '
+                            'covering the ankle or some part of the calf.',
+                category_id=category.id)
+    db_session.add(item)
+    db_session.commit()
+
     category = db_session.query(Category).filter_by(name='Baseball').one()
     item = Item(name='Bat',
                 description='A smooth wooden or metal club used to hit the '
