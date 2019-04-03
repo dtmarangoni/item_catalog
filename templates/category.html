@@ -24,17 +24,25 @@
   <div class="row bg-light justify-content-left px-0 mx-0">
     <div class="col">
       <div class="card-columns">
+
+        {% for item in items %}
+
         <div class="card">
           <div class="card-body">
-            <p class="card-text text-center text-danger font-weight-bold">Soccer</p>
+            <a href="{{url_for('item', category=category, item=item.name)}}">
+              <p class="card-text text-center text-danger font-weight-bold">{{item.name}}</p>
+            </a>
           </div>
           <div class="card-footer m-0 p-0 text-center medium_gray-bg">
-            <div class="btn-group btn-group-sm" role="group" aria-label="Edit or Delete">
-              <button type="button" class="btn btn-link text-white font-weight-bold">Edit</button>
-              <button type="button" class="btn btn-link text-white font-weight-bold">Delete</button>
-            </div>
+            <a href="{{url_for('edit_item', category=category, item=item.name)}}"
+               class="btn btn-sm btn-link text-white font-weight-bold">Edit</a>
+            <a href="{{url_for('delete_item', category=category, item=item.name)}}"
+               class="btn btn-sm btn-link text-white font-weight-bold">Delete</a>
           </div>
         </div>
+
+        {% endfor %}
+
       </div>
     </div>
   </div>

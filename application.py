@@ -1,4 +1,5 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request, redirect, url_for
+from flask import flash
 import random
 import string
 
@@ -29,29 +30,49 @@ def shutdown_session(exception=None):
 
 # Views
 
-# Index page that shows the ten latest added items
 @app.route('/')
 @app.route('/catalog')
 def catalog():
-    return render_template('catalog.html')
+    """Index page that shows the latest added items in the catalog."""
+    items = db_session.query(Item).order_by(Item.id.desc()).limit(10)
+    return render_template('catalog.html', items=items)
 
 
-# Page for showing items from a specific category
 @app.route('/catalog/<string:category>')
 def category(category):
-    return render_template('category.html', category=category)
+    """Shows all items added to a specific category."""
+    items = db_session.query(Item).join(Category).filter(
+        Category.name == category).all()
+    return render_template('category.html', category=category, items=items)
 
 
-# Page for showing item information
 @app.route('/catalog/<string:category>/<string:item>')
 def item(category, item):
-    return render_template('item.html')
+    """Page for showing an item information."""
+    item = db_session.query(Item).filter_by(name=item).one()
+    return render_template('item.html', category=category, item=item)
 
 
 # Page for add an item
-@app.route('/catalog/<string:category>/add')
+@app.route('/catalog/<string:category>/add', methods=['GET', 'POST'])
 def add_item(category):
-    return render_template('add_item.html', category=category)
+    """Route for item adding page or to process form submission.
+    The item data from form will be added in the database.
+    """
+    if request.method == 'GET':
+        return render_template('add_item.html', category=category)
+    elif request.method == 'POST':
+        cat = db_session.query(Category).filter_by(
+            name=request.form['category']).one()
+        item = Item(
+            name=request.form['name'],
+            description=request.form['description'],
+            category_id=cat.id
+        )
+        db_session.add(item)
+        db_session.commit()
+        flash('New Menu Item Created.')
+        return redirect(url_for('category', category=cat.name))
 
 
 # Page for editing an item

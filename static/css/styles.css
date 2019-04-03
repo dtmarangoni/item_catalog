@@ -14,6 +14,10 @@
     background-color: #FF9933;
 }
 
+.orange-bg:hover {
+    background-color: #FF6600;
+}
+
 .orange-font {
     color: #FF9933;
 }
@@ -37,4 +41,8 @@
 
 .button-width-large {
     width: 90px;
+}
+
+a:hover {
+    text-decoration: none;
 }
