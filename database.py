@@ -31,9 +31,9 @@ class User(Base):
     """
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
-    username = Column(String(32), nullable=False, index=True)
+    username = Column(String(32), nullable=False, index=True, unique=True)
     password_hash = Column(String(64))
-    email = Column(String(60), nullable=False)
+    email = Column(String(60), nullable=False, unique=True)
     picture = Column(String(250))
 
     def hash_password(self, password):
@@ -96,7 +96,7 @@ class Category(Base):
     It can be serializable"""
     __tablename__ = 'category'
     id = Column(Integer, primary_key=True)
-    name = Column(String(50), nullable=False, index=True)
+    name = Column(String(50), nullable=False, index=True, unique=True)
 
     @property
     def serialize(self):

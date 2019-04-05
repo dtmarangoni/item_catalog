@@ -37,7 +37,7 @@ def shutdown_session(exception=None):
 @app.route('/catalog')
 def catalog():
     """Index page that shows the latest added items in the catalog."""
-    items = db_session.query(Item).order_by(Item.id.desc()).limit(10)
+    items = db_session.query(Item).order_by(Item.id.desc()).limit(9)
     return render_template('catalog.html', categories=categories, items=items)
 
 
@@ -67,9 +67,6 @@ def add_item(category):
         return render_template('add_item.html', categories=categories,
                                category=category)
     elif request.method == 'POST':
-        print('\n\n')
-        print(request.form['category'])
-        print('\n\n')
         cat = db_session.query(Category).filter_by(
             name=request.form['category']).one()
         item = Item(
@@ -83,27 +80,53 @@ def add_item(category):
         return redirect(url_for('catalog'))
 
 
-# Page for editing an item
-@app.route('/catalog/<string:category>/<string:item>/edit')
+@app.route('/catalog/<string:category>/<string:item>/edit',
+           methods=['GET', 'POST'])
 def edit_item(category, item):
-    return render_template('edit_item.html', categories=categories,
-                           category=category, item=item)
+    """Route for item editing page or to process form submission.
+    The item data from form will be updated in the database.
+    """
+    i = db_session.query(Item).join(Category).filter(
+        Item.name == item, Category.name == category).one()
+    if request.method == 'GET':
+        return render_template('edit_item.html', categories=categories,
+                               category=category, item=i)
+    elif request.method == 'POST':
+        i.name = request.form['name']
+        i.description = request.form['description']
+
+        # In case of category change, we need the new ID
+        cat = db_session.query(Category).filter_by(
+            name=request.form['category']).one()
+        i.category_id = cat.id
+        db_session.add(i)
+        db_session.commit()
+        return redirect(url_for('catalog'))
 
 
 # Page for deleting an item
-@app.route('/catalog/<string:category>/<string:item>/delete')
+@app.route('/catalog/<string:category>/<string:item>/delete',
+           methods=['GET', 'POST'])
 def delete_item(category, item):
-    return render_template('delete_item.html', categories=categories)
+    i = db_session.query(Item).join(Category).filter(
+        Item.name == item, Category.name == category).one()
+    if request.method == 'GET':
+        return render_template('delete_item.html', categories=categories,
+                               category=category, item=i)
+    elif request.method == 'POST':
+        db_session.delete(i)
+        db_session.commit()
+        return redirect(url_for('catalog'))
 
 
 # Login page
-@app.route('/catalog/login')
+@app.route('/catalog/login', methods=['GET', 'POST'])
 def login():
     return render_template('login.html', categories=categories)
 
 
 # New user page
-@app.route('/catalog/new_user')
+@app.route('/catalog/new_user', methods=['GET', 'POST'])
 def new_user():
     return render_template('new_user.html', categories=categories)
 

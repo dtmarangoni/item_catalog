@@ -13,16 +13,18 @@
   <div class="row mt-3 align-items-center">
     <div class="col-auto">
       <div class="card">
-        <h5 class="card-header text-danger ligh_gray-bg">Soccer</h5>
-        <div class="card-body">
-          <p class="card-text dark_gray-font font-weight-bold">Are you sure you want to delete?</p>
-        </div>
-        <div class="card-footer m-0 p-0 text-center orange-bg">
-            <div class="btn-group btn-group-sm" role="group" aria-label="Delete or Cancel">
-              <a class="btn btn-link text-white font-weight-bold" href="">Delete</a>
-              <a class="btn btn-link text-white font-weight-bold" href="javascript:history.back()">Cancel</a>
-            </div>
+        <form action="{{url_for('delete_item', category=category, item=item.name)}}" method='POST'>
+          <h5 class="card-header text-danger ligh_gray-bg">{{item.name}}</h5>
+          <div class="card-body">
+            <p class="card-text dark_gray-font font-weight-bold">Are you sure you want to delete?</p>
           </div>
+          <div class="card-footer m-0 p-0 text-center orange-bg">
+              <div class="btn-group btn-group-sm" role="group" aria-label="Delete or Cancel">
+                <button type="submit" class="btn btn-link text-white font-weight-bold">Delete</button>
+                <a class="btn btn-link text-white font-weight-bold" href="javascript:history.back()">Cancel</a>
+              </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
