@@ -30,15 +30,11 @@
             <label for="category"
                    class="dark_gray-font font-weight-bold">Category</label>
             <select class="form-control" name="category" id="category" required>
-              <option>Soccer</option>
-              <option>Basketball</option>
-              <option>Baseball</option>
-              <option>Frisbee</option>
-              <option>Snowboarding</option>
-              <option>Rock Climbing</option>
-              <option>Foosball</option>
-              <option>Skating</option>
-              <option>Hockey</option>
+
+              {% for cat in categories %}
+                <option>{{cat.name}}</option>
+              {% endfor %}
+
             </select>
           </div>
         </div>

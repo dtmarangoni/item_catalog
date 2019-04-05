@@ -16,6 +16,9 @@ app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = ''.join(random.SystemRandom().choice(
     string.ascii_uppercase + string.digits) for _ in range(32))
 
+# Load the pre-defined DB categories.
+categories = db_session.query(Category).all()
+
 
 # Automatically remove database sessions at the end of the request or when
 # the application shuts down
@@ -35,7 +38,7 @@ def shutdown_session(exception=None):
 def catalog():
     """Index page that shows the latest added items in the catalog."""
     items = db_session.query(Item).order_by(Item.id.desc()).limit(10)
-    return render_template('catalog.html', items=items)
+    return render_template('catalog.html', categories=categories, items=items)
 
 
 @app.route('/catalog/<string:category>')
@@ -43,25 +46,30 @@ def category(category):
     """Shows all items added to a specific category."""
     items = db_session.query(Item).join(Category).filter(
         Category.name == category).all()
-    return render_template('category.html', category=category, items=items)
+    return render_template('category.html', categories=categories,
+                           category=category, items=items)
 
 
 @app.route('/catalog/<string:category>/<string:item>')
 def item(category, item):
     """Page for showing an item information."""
     item = db_session.query(Item).filter_by(name=item).one()
-    return render_template('item.html', category=category, item=item)
+    return render_template('item.html', categories=categories,
+                           category=category, item=item)
 
 
-# Page for add an item
 @app.route('/catalog/<string:category>/add', methods=['GET', 'POST'])
 def add_item(category):
     """Route for item adding page or to process form submission.
     The item data from form will be added in the database.
     """
     if request.method == 'GET':
-        return render_template('add_item.html', category=category)
+        return render_template('add_item.html', categories=categories,
+                               category=category)
     elif request.method == 'POST':
+        print('\n\n')
+        print(request.form['category'])
+        print('\n\n')
         cat = db_session.query(Category).filter_by(
             name=request.form['category']).one()
         item = Item(
@@ -72,31 +80,32 @@ def add_item(category):
         db_session.add(item)
         db_session.commit()
         flash('New Menu Item Created.')
-        return redirect(url_for('category', category=cat.name))
+        return redirect(url_for('catalog'))
 
 
 # Page for editing an item
 @app.route('/catalog/<string:category>/<string:item>/edit')
 def edit_item(category, item):
-    return render_template('edit_item.html', category=category)
+    return render_template('edit_item.html', categories=categories,
+                           category=category, item=item)
 
 
 # Page for deleting an item
 @app.route('/catalog/<string:category>/<string:item>/delete')
 def delete_item(category, item):
-    return render_template('delete_item.html')
+    return render_template('delete_item.html', categories=categories)
 
 
 # Login page
 @app.route('/catalog/login')
 def login():
-    return render_template('login.html')
+    return render_template('login.html', categories=categories)
 
 
 # New user page
 @app.route('/catalog/new_user')
 def new_user():
-    return render_template('new_user.html')
+    return render_template('new_user.html', categories=categories)
 
 
 @app.route('/catalog/api/v1/json')

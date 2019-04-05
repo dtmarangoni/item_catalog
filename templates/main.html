@@ -31,33 +31,13 @@
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('category', category='Soccer') }}">Soccer</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('category', category='Basketball') }}">Basketball</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('category', category='Baseball') }}">Baseball</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('category', category='Frisbee') }}">Frisbee</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('category', category='Snowboarding') }}">Snowboarding</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('category', category='Rock Climbing') }}">Rock Climbing</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('category', category='Foosball') }}">Foosball</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('category', category='Skating') }}">Skating</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('category', category='Hockey') }}">Hockey</a>
-              </li>
+
+              {% for cat in categories %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('category', category=cat.name) }}">{{cat.name}}</a>
+                </li>
+              {% endfor %}
+
             </ul>
           </div>
         </nav>
