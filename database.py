@@ -90,6 +90,19 @@ class User(Base):
             return None
         return data['id']
 
+    @property
+    def serialize(self):
+        """Send a JSON object in a serializable format.
+
+        Returns: the JSON object.
+        """
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'picture:': self.picture
+        }
+
 
 class Category(Base):
     """Class that represents the item category in DB.

@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for
-from flask import flash
+from flask import g, flash
+from flask_httpauth import HTTPBasicAuth
 import random
 import string
 
@@ -15,6 +16,9 @@ app.config['DEBUG'] = True
 #                for _ in range(32))
 app.config['SECRET_KEY'] = ''.join(random.SystemRandom().choice(
     string.ascii_uppercase + string.digits) for _ in range(32))
+
+# Create the basic Flask HTTP Auth
+auth = HTTPBasicAuth()
 
 # Load the pre-defined DB categories.
 categories = db_session.query(Category).all()
@@ -76,7 +80,6 @@ def add_item(category):
         )
         db_session.add(item)
         db_session.commit()
-        flash('New Menu Item Created.')
         return redirect(url_for('catalog'))
 
 
@@ -104,10 +107,12 @@ def edit_item(category, item):
         return redirect(url_for('catalog'))
 
 
-# Page for deleting an item
 @app.route('/catalog/<string:category>/<string:item>/delete',
            methods=['GET', 'POST'])
 def delete_item(category, item):
+    """Route for item deleting page or to process form submission.
+    After confirmation, the item from form will be deleted from database.
+    """
     i = db_session.query(Item).join(Category).filter(
         Item.name == item, Category.name == category).one()
     if request.method == 'GET':
@@ -117,18 +122,6 @@ def delete_item(category, item):
         db_session.delete(i)
         db_session.commit()
         return redirect(url_for('catalog'))
-
-
-# Login page
-@app.route('/catalog/login', methods=['GET', 'POST'])
-def login():
-    return render_template('login.html', categories=categories)
-
-
-# New user page
-@app.route('/catalog/new_user', methods=['GET', 'POST'])
-def new_user():
-    return render_template('new_user.html', categories=categories)
 
 
 @app.route('/catalog/api/v1/json')
@@ -143,6 +136,100 @@ def catalog_json():
         catalog.append(cat)
 
     return jsonify(Category=catalog)
+
+
+@app.route('/catalog/login', methods=['GET', 'POST'])
+def login():
+    """Route for login page or to process site login form submission."""
+    if request.method == 'GET':
+        return render_template('login.html', categories=categories)
+    elif request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if verify_password(username, password):
+            return redirect(url_for('catalog'))
+        else:
+            flash('Invalid username and/or login.')
+            return redirect(url_for('login'))
+
+
+@app.route('/catalog/new_user', methods=['GET', 'POST'])
+def new_user():
+    """Route for new user login page or to process form submission.
+    After the user is created the site is redirected to the main page.
+    """
+    if request.method == 'GET':
+        return render_template('new_user.html', categories=categories)
+    elif request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+
+        # Verify if the username is already registered in DB
+        u = db_session.query(User).filter_by(username=username).first()
+        if u:
+            flash('Username already in use. Please choose another one.')
+            return redirect(url_for('new_user'))
+
+        # Verify if the email is already registered in DB
+        u = db_session.query(User).filter_by(email=email).first()
+        if u:
+            flash('E-mail already registered in the site.')
+            return redirect(url_for('new_user'))
+
+        user = User(username=username, email=email)
+        user.hash_password(password)
+        db_session.add(user)
+        db_session.commit()
+        g.user = user
+        return redirect(url_for('catalog'))
+
+
+# Use @auth.login_required to require a login in order to access a
+# resource. It will call @auth.verify_password
+@app.route('/catalog/token')
+@auth.login_required
+def get_app_token():
+    """If verify password succeeds it will return the authentication token.
+
+    Returns:
+        The authentication token returned as a Flask response in a JSON format.
+    """
+    token = g.user.gen_auth_token()
+    return jsonify({'token': token.decode('ascii')})
+
+
+# Utility methods.
+
+@auth.verify_password
+def verify_password(username_or_token, password):
+    """Called by Flask when the login is required.
+
+    Args:
+        username_or_token (str): the login username or auth token.
+        password (str): the login password. Blank when the login method is
+        by authentication token.
+
+    Returns:
+        bool: True for sucess, False otherwise.
+    """
+    user_id = User.verify_auth_token(username_or_token)
+    if user_id:
+        user = db_session.query(User).filter_by(id=user_id).one()
+    else:
+        user = db_session.query(User).filter_by(
+            username=username_or_token).first()
+        if (not user) or (not user.verify_password(password)):
+            return False
+    g.user = user
+    return True
+
+
+@app.route('/catalog/api/v1/users')
+def users_json():
+    """API end point for sending all registered users in a JSON format."""
+    users = db_session.query(User).all()
+    return jsonify(Users=[user.serialize for user in users])
 
 
 if __name__ == '__main__':
