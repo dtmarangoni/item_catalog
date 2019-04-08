@@ -7,7 +7,7 @@ import json
 
 from database import db_session, User, Category, Item
 from oauth_providers import oauth_google, oauth_facebook, register_oauth_user
-from oauth_providers import login_disconnect
+from oauth_providers import oauth_disconnect
 
 
 # Create app
@@ -199,16 +199,18 @@ def oauth_login(provider):
 @app.route('/catalog/login/disconnect')
 def disconnect():
     """Revoke a current user's token and reset his login session."""
-    status, response = login_disconnect()
-    if status:
-        del session['user_id']
-        del session['provider']
-        del session['oauth_user_id']
-        del session['oauth_token']
-        del session['user_token']
+    if session.get('provider'):
+        status, response = oauth_disconnect()
+        if status:
+            g.user = None
+            session.clear()
+        else:
+            print('\n' + response + '\n')
+    else:
         g.user = None
+        session.clear()
 
-    return redirect(url_for(catalog))
+    return redirect(url_for('catalog'))
 
 
 @app.route('/catalog/new_user', methods=['GET', 'POST'])
