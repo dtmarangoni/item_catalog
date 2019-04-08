@@ -31,9 +31,9 @@ class User(Base):
     """
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
-    username = Column(String(32), nullable=False, index=True, unique=True)
+    username = Column(String(32), nullable=False)
     password_hash = Column(String(64))
-    email = Column(String(60), nullable=False, unique=True)
+    email = Column(String(60), nullable=False, unique=True, index=True)
     picture = Column(String(250))
 
     def hash_password(self, password):

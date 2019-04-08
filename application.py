@@ -1,10 +1,13 @@
-from flask import Flask, render_template, jsonify, request, redirect, url_for
-from flask import g, flash
+from flask import Flask, render_template, jsonify, request
+from flask import g, session, flash, make_response, redirect, url_for
 from flask_httpauth import HTTPBasicAuth
 import random
 import string
+import json
 
 from database import db_session, User, Category, Item
+from oauth_providers import oauth_google, oauth_facebook, register_oauth_user
+from oauth_providers import login_disconnect
 
 
 # Create app
@@ -24,15 +27,20 @@ auth = HTTPBasicAuth()
 categories = db_session.query(Category).all()
 
 
-# Automatically remove database sessions at the end of the request or when
-# the application shuts down
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     """Automatically remove database sessions.
-     This is done at the end of the request or when the application shuts
-     down.
-     """
+    This is done at the end of the request or when the application shuts down.
+    """
     db_session.remove()
+
+
+@auth.error_handler
+def auth_error():
+    """Called by Flask when an authentication error occurs."""
+    response = make_response(json.dumps('Authentication error'), 401)
+    response.headers['Content-Type'] = 'application/json'
+    return response
 
 
 # Views
@@ -138,8 +146,8 @@ def catalog_json():
     return jsonify(Category=catalog)
 
 
-@app.route('/catalog/login', methods=['GET', 'POST'])
-def login():
+@app.route('/catalog/site_login', methods=['GET', 'POST'])
+def site_login():
     """Route for login page or to process site login form submission."""
     if request.method == 'GET':
         return render_template('login.html', categories=categories)
@@ -151,6 +159,56 @@ def login():
         else:
             flash('Invalid username and/or login.')
             return redirect(url_for('login'))
+
+
+@app.route('/catalog/oauth_login/<string:provider>', methods=['POST'])
+def oauth_login(provider):
+    """Route for oauth providers login."""
+    if provider == 'google':
+        # Parse de auth code
+        g_code = request.data
+        # Get user info and oauth token
+        data = oauth_google(g_code)
+    elif provider == 'facebook':
+        # Parse de auth code
+        f_token = request.data
+        # Get user info and oauth token
+        data = oauth_facebook(f_token)
+    else:
+        response = make_response(json.dumps('Unrecognized provider'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+    # Check if user is already registered in DB. If not, add it.
+    user_data = data['user']
+    oauth_token = data['token']
+    user = User(username=user_data['name'], email=user_data['email'],
+                picture=user_data['picture'])
+    user = register_oauth_user(user)
+    # Add user to g and provider info to session
+    g.user = user
+    session['user_id'] = user.id
+    session['provider'] = provider
+    session['oauth_user_id'] = user_data['id']
+    session['oauth_token'] = oauth_token
+    session['user_token'] = user.gen_auth_token()
+
+    return redirect(url_for('catalog'))
+
+
+@app.route('/catalog/login/disconnect')
+def disconnect():
+    """Revoke a current user's token and reset his login session."""
+    status, response = login_disconnect()
+    if status:
+        del session['user_id']
+        del session['provider']
+        del session['oauth_user_id']
+        del session['oauth_token']
+        del session['user_token']
+        g.user = None
+
+    return redirect(url_for(catalog))
 
 
 @app.route('/catalog/new_user', methods=['GET', 'POST'])
@@ -182,6 +240,8 @@ def new_user():
         db_session.add(user)
         db_session.commit()
         g.user = user
+        session['user_id'] = user.id
+        session['user_token'] = user.gen_auth_token()
         return redirect(url_for('catalog'))
 
 
@@ -190,10 +250,10 @@ def new_user():
 @app.route('/catalog/token')
 @auth.login_required
 def get_app_token():
-    """If verify password succeeds it will return the authentication token.
+    """API end point for getting an user access token.
 
     Returns:
-        The authentication token returned as a Flask response in a JSON format.
+        The access token returned as a Flask response in JSON format.
     """
     token = g.user.gen_auth_token()
     return jsonify({'token': token.decode('ascii')})
@@ -211,17 +271,26 @@ def verify_password(username_or_token, password):
         by authentication token.
 
     Returns:
-        bool: True for sucess, False otherwise.
+        bool: True for success, False otherwise.
     """
+
+    print('\n\n Validating user. Token or username: {}\n\n'.format(username_or_token))
+
     user_id = User.verify_auth_token(username_or_token)
     if user_id:
         user = db_session.query(User).filter_by(id=user_id).one()
+        # Valid token, add it to the session
+        session['user_token'] = username_or_token
     else:
         user = db_session.query(User).filter_by(
             username=username_or_token).first()
         if (not user) or (not user.verify_password(password)):
             return False
+        else:
+            # No token yet, so generate one.
+            session['user_token'] = user.gen_auth_token()
     g.user = user
+    session['user_id'] = user.id
     return True
 
 
