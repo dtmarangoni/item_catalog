@@ -71,6 +71,7 @@ def item(category, item):
 
 
 @app.route('/catalog/<string:category>/add', methods=['GET', 'POST'])
+@auth.login_required
 def add_item(category):
     """Route for item adding page or to process form submission.
     The item data from form will be added in the database.
@@ -93,6 +94,7 @@ def add_item(category):
 
 @app.route('/catalog/<string:category>/<string:item>/edit',
            methods=['GET', 'POST'])
+@auth.login_required
 def edit_item(category, item):
     """Route for item editing page or to process form submission.
     The item data from form will be updated in the database.
@@ -117,6 +119,7 @@ def edit_item(category, item):
 
 @app.route('/catalog/<string:category>/<string:item>/delete',
            methods=['GET', 'POST'])
+@auth.login_required
 def delete_item(category, item):
     """Route for item deleting page or to process form submission.
     After confirmation, the item from form will be deleted from database.
@@ -132,9 +135,10 @@ def delete_item(category, item):
         return redirect(url_for('catalog'))
 
 
-@app.route('/catalog/api/v1/json')
+@app.route('/catalog/api/v1/catalog.json')
+@auth.login_required
 def catalog_json():
-    """API end point for sending all catalog in a JSON format."""
+    """API end point for sending all catalog in JSON format."""
     categories = db_session.query(Category).all()
     items = db_session.query(Item).all()
     catalog = []
@@ -143,7 +147,28 @@ def catalog_json():
         cat['Item'] = [i.serialize for i in items if i.category_id == c.id]
         catalog.append(cat)
 
-    return jsonify(Category=catalog)
+    return jsonify(Catalog=catalog)
+
+
+@app.route('/catalog/api/v1/<string:category>.json')
+@auth.login_required
+def category_json(category):
+    """API end point for getting the category and items inside of it.
+    The return is a response in JSON format."""
+    c = db_session.query(Category).filter_by(name=category).first()
+    items = db_session.query(Item).filter_by(category_id=c.id)
+    cat = c.serialize
+    cat['Item'] = [item.serialize for item in items]
+    return jsonify(Category=cat)
+
+
+@app.route('/catalog/api/v1/<string:category>/<string:item>.json')
+@auth.login_required
+def item_json(category, item):
+    """API end point for getting an item information in JSON format."""
+    i = db_session.query(Item).join(Category).filter(
+        Item.name == item, Category.name == category).first()
+    return jsonify(Item=i.serialize)
 
 
 @app.route('/catalog/site_login', methods=['GET', 'POST'])
