@@ -42,14 +42,16 @@ def populate_db():
     category = db_session.query(Category).filter_by(name='Snowboarding').one()
     item = Item(name='Snowboard',
                 description='Best for any terrain conditions',
-                category_id=category.id)
+                category_id=category.id,
+                user_id=user.id)
     db_session.add(item)
     db_session.commit()
 
     category = db_session.query(Category).filter_by(name='Soccer').one()
     item = Item(name='Soccer ball',
                 description='An inflated ball used in playing soccer.',
-                category_id=category.id)
+                category_id=category.id,
+                user_id=user.id)
     db_session.add(item)
     db_session.commit()
 
@@ -57,7 +59,8 @@ def populate_db():
     item = Item(name='Socks',
                 description='Item of clothing worn on the feet and often '
                             'covering the ankle or some part of the calf.',
-                category_id=category.id)
+                category_id=category.id,
+                user_id=user.id)
     db_session.add(item)
     db_session.commit()
 
@@ -65,7 +68,8 @@ def populate_db():
     item = Item(name='Bat',
                 description='A smooth wooden or metal club used to hit the '
                             'ball after it is thrown by the pitcher.',
-                category_id=category.id)
+                category_id=category.id,
+                user_id=user.id)
     db_session.add(item)
     db_session.commit()
 
@@ -74,14 +78,16 @@ def populate_db():
                 description='Made with metal blades attached underfoot and '
                             'used to propel the bearer across a sheet of ice '
                             'while ice skating.',
-                category_id=category.id)
+                category_id=category.id,
+                user_id=user.id)
     db_session.add(item)
     db_session.commit()
 
     category = db_session.query(Category).filter_by(name='Frisbee').one()
     item = Item(name='Disc',
                 description='A frisbee disc with size of 175 gram disc.',
-                category_id=category.id)
+                category_id=category.id,
+                user_id=user.id)
     db_session.add(item)
     db_session.commit()
 

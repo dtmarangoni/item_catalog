@@ -71,11 +71,14 @@ def item(category, item):
 
 
 @app.route('/catalog/<string:category>/add', methods=['GET', 'POST'])
-@auth.login_required
 def add_item(category):
     """Route for item adding page or to process form submission.
     The item data from form will be added in the database.
     """
+    # Anonymous users cant add items. They must login first
+    if not session.get('user_id'):
+        return redirect(url_for('site_login'))
+
     if request.method == 'GET':
         return render_template('add_item.html', categories=categories,
                                category=category)
@@ -85,7 +88,8 @@ def add_item(category):
         item = Item(
             name=request.form['name'],
             description=request.form['description'],
-            category_id=cat.id
+            category_id=cat.id,
+            user_id=session['user_id']
         )
         db_session.add(item)
         db_session.commit()
@@ -94,13 +98,27 @@ def add_item(category):
 
 @app.route('/catalog/<string:category>/<string:item>/edit',
            methods=['GET', 'POST'])
-@auth.login_required
 def edit_item(category, item):
     """Route for item editing page or to process form submission.
     The item data from form will be updated in the database.
     """
+    # Anonymous users cant edit items. They must login first
+    if not session.get('user_id'):
+        return redirect(url_for('site_login'))
+
     i = db_session.query(Item).join(Category).filter(
         Item.name == item, Category.name == category).one()
+
+    # Unauthorized users cant edit items from other users.
+    # The HTML pages are protected but this is implemented to avoid manually
+    # url user access to this route and item editing.
+    if session.get('user_id') != i.user_id:
+        response = make_response(
+            json.dumps("Unauthorized. You can't edit others user's item."),
+            401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
     if request.method == 'GET':
         return render_template('edit_item.html', categories=categories,
                                category=category, item=i)
@@ -119,13 +137,27 @@ def edit_item(category, item):
 
 @app.route('/catalog/<string:category>/<string:item>/delete',
            methods=['GET', 'POST'])
-@auth.login_required
 def delete_item(category, item):
     """Route for item deleting page or to process form submission.
     After confirmation, the item from form will be deleted from database.
     """
+    # Anonymous users cant delete items. They must login first
+    if not session.get('user_id'):
+        return redirect(url_for('site_login'))
+
     i = db_session.query(Item).join(Category).filter(
         Item.name == item, Category.name == category).one()
+
+    # Unauthorized users cant delete items from other users.
+    # The HTML pages are protected but this is implemented to avoid manually
+    # url user access to this route and item deleting.
+    if session.get('user_id') != i.user_id:
+        response = make_response(
+            json.dumps("Unauthorized. You can't delete others user's item."),
+            401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
     if request.method == 'GET':
         return render_template('delete_item.html', categories=categories,
                                category=category, item=i)
@@ -300,9 +332,6 @@ def verify_password(username_or_token, password):
     Returns:
         bool: True for success, False otherwise.
     """
-
-    print('\n\n Validating user. Token or username: {}\n\n'.format(username_or_token))
-
     user_id = User.verify_auth_token(username_or_token)
     if user_id:
         user = db_session.query(User).filter_by(id=user_id).one()
