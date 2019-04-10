@@ -1,3 +1,9 @@
+"""The Flask application with routes treatment.
+
+The app will interact with Database through SQLAlchemy. And with oauth
+providers through project defined functions in oauth_providers module.
+"""
+
 from flask import Flask, render_template, jsonify, request
 from flask import g, session, flash, make_response, redirect, url_for
 from flask_httpauth import HTTPBasicAuth
@@ -30,6 +36,7 @@ categories = db_session.query(Category).all()
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     """Automatically remove database sessions.
+
     This is done at the end of the request or when the application shuts down.
     """
     db_session.remove()
@@ -55,7 +62,7 @@ def catalog():
 
 @app.route('/catalog/<string:category>')
 def category(category):
-    """Shows all items added to a specific category."""
+    """Show all items added to a specific category."""
     items = db_session.query(Item).join(Category).filter(
         Category.name == category).all()
     return render_template('category.html', categories=categories,
@@ -73,6 +80,7 @@ def item(category, item):
 @app.route('/catalog/<string:category>/add', methods=['GET', 'POST'])
 def add_item(category):
     """Route for item adding page or to process form submission.
+
     The item data from form will be added in the database.
     """
     # Anonymous users cant add items. They must login first
@@ -100,6 +108,7 @@ def add_item(category):
            methods=['GET', 'POST'])
 def edit_item(category, item):
     """Route for item editing page or to process form submission.
+
     The item data from form will be updated in the database.
     """
     # Anonymous users cant edit items. They must login first
@@ -139,6 +148,7 @@ def edit_item(category, item):
            methods=['GET', 'POST'])
 def delete_item(category, item):
     """Route for item deleting page or to process form submission.
+
     After confirmation, the item from form will be deleted from database.
     """
     # Anonymous users cant delete items. They must login first
@@ -186,7 +196,10 @@ def catalog_json():
 @auth.login_required
 def category_json(category):
     """API end point for getting the category and items inside of it.
-    The return is a response in JSON format."""
+
+    Returns:
+        A response in JSON format.
+    """
     c = db_session.query(Category).filter_by(name=category).first()
     items = db_session.query(Item).filter_by(category_id=c.id)
     cat = c.serialize
@@ -242,6 +255,7 @@ def oauth_login(provider):
     user = User(username=user_data['name'], email=user_data['email'],
                 picture=user_data['picture'])
     user = register_oauth_user(user)
+
     # Add user to g and provider info to session
     g.user = user
     session['user_id'] = user.id
@@ -273,6 +287,7 @@ def disconnect():
 @app.route('/catalog/new_user', methods=['GET', 'POST'])
 def new_user():
     """Route for new user login page or to process form submission.
+
     After the user is created the site is redirected to the main page.
     """
     if request.method == 'GET':
@@ -348,13 +363,6 @@ def verify_password(username_or_token, password):
     g.user = user
     session['user_id'] = user.id
     return True
-
-
-@app.route('/catalog/api/v1/users')
-def users_json():
-    """API end point for sending all registered users in a JSON format."""
-    users = db_session.query(User).all()
-    return jsonify(Users=[user.serialize for user in users])
 
 
 if __name__ == '__main__':

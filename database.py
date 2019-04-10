@@ -1,3 +1,9 @@
+"""The database module that defines the DB engine and tables models.
+
+When running this module from command line it will create the DB
+tables. This is necessary for initial DB startup.
+"""
+
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship
 from sqlalchemy import create_engine, Column, ForeignKey, Integer, String
@@ -26,9 +32,11 @@ secret_key = ''.join(random.SystemRandom().choice(
 
 class User(Base):
     """Class that represents the user table in DB.
+
     It also has methods for hashing and verifying user password, and
     generating and validating authentication tokens.
     """
+
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
     username = Column(String(32), nullable=False)
@@ -78,7 +86,8 @@ class User(Base):
 
         Returns:
             None: if the token is expired or invalid.
-            id (int): the user id."""
+            id (int): the user id.
+        """
         s = Serializer(secret_key)
         try:
             data = s.loads(token)
@@ -106,7 +115,10 @@ class User(Base):
 
 class Category(Base):
     """Class that represents the item category in DB.
-    It can be serializable"""
+
+    It can be serializable.
+    """
+
     __tablename__ = 'category'
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False, index=True, unique=True)
@@ -125,14 +137,17 @@ class Category(Base):
 
 class Item(Base):
     """Class that represents the item in DB.
-    It can be serializable"""
+
+    It can be serializable.
+    """
+
     __tablename__ = 'item'
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False, index=True)
     description = Column(String(500))
-    category_id = Column(Integer, ForeignKey('category.id'))
+    category_id = Column(Integer, ForeignKey('category.id'), nullable=False)
     category = relationship(Category)
-    user_id = Column(Integer, ForeignKey('user.id'))
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     user = relationship(User)
 
     @property
@@ -152,6 +167,7 @@ class Item(Base):
 
 def init_db():
     """Create the DB tables.
+
     This is necessary as initial step of app installation.
     """
     Base.metadata.create_all(bind=engine)
@@ -161,6 +177,7 @@ def init_db():
 # This is necessary for initial DB startup.
 if __name__ == '__main__':
     """When running this module from command line it will create the DB tables.
+
     This is necessary for initial DB startup.
     """
     init_db()

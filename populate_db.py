@@ -1,8 +1,11 @@
+"""Module to populate database with example info."""
+
 from database import db_session, User, Category, Item
 
 
 def populate_db():
     """Populate the DB with some initial data.
+
     It will be added an example user, some categories and items.
     """
     user = User(username='carlos', email='carlos@email.com',

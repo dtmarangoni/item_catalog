@@ -1,3 +1,11 @@
+"""Utility module to provide oauth methods.
+
+It includes:
+    connection and get user info from provider;
+    disconnection from providers;
+    registering of oauth provider user in database.
+"""
+
 from flask import make_response, g, session
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
@@ -9,6 +17,7 @@ from database import db_session, User
 
 def oauth_google(code):
     """Get Google user info following the OAuth process.
+
     First the Google one time code will be exchanged for an credentials object.
     Then with the valid credentials the user info will be accessed.
 
@@ -65,12 +74,14 @@ def oauth_google(code):
         response.headers['Content-Type'] = 'application/json'
         return response
 
+    # Return the user data and auth token compiled together in a dict
     data = {'user': result.json(), 'token': credentials.access_token}
     return data
 
 
 def oauth_facebook(access_token):
     """Get Facebook user info following the OAuth process.
+
     First the Facebook one time token will be exchanged for an access token.
     Then with the valid token the user info will be accessed.
 
@@ -82,7 +93,6 @@ def oauth_facebook(access_token):
             picture; and the oauth token.
             Format: {'user': ..., 'token': ...}
     """
-
     client_secret_file = json.loads(
         open('./static/json/facebook_client_secrets.json', 'r').read())
     app_id = client_secret_file['web']['app_id']
@@ -116,6 +126,7 @@ def oauth_facebook(access_token):
     picture = requests.get(url, params=params).json()
     user_data['picture'] = picture["data"]["url"]
 
+    # Return the user data and auth token compiled together in a dict
     data = {'user': user_data, 'token': token}
     return data
 
@@ -152,6 +163,7 @@ def oauth_disconnect():
 
 def register_oauth_user(user):
     """Check if the user is registered in database and return it.
+
     If its a new user, he/she will be registered and also returned.
 
     Args:
