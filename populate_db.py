@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+#
 """Module to populate database with example info."""
 
 from database import db_session, User, Category, Item

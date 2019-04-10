@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+#
 """The Flask application with routes treatment.
 
 The app will interact with Database through SQLAlchemy. And with oauth

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+#
 """The database module that defines the DB engine and tables models.
 
 When running this module from command line it will create the DB
