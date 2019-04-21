@@ -17,7 +17,10 @@ import string
 
 
 # Create the DB engine and session
-engine = create_engine('sqlite:///item_catalog.db', convert_unicode=True)
+# engine = create_engine('sqlite:///item_catalog.db', convert_unicode=True)
+engine = create_engine(
+    'postgresql://catalog:icproject@localhost:5432/item_catalog',
+    convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
@@ -42,7 +45,7 @@ class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
     username = Column(String(32), nullable=False)
-    password_hash = Column(String(64))
+    password_hash = Column(String())
     email = Column(String(60), nullable=False, unique=True, index=True)
     picture = Column(String(250))
 
