@@ -7,7 +7,7 @@
   <script>
         gapi.load('auth2', function() {
             auth2 = gapi.auth2.init({
-                client_id: 'INSERT YOUR WEB APP CLIENT ID',
+                client_id: '{{g_client_id}}',
                 // Scopes to request in addition to 'profile' and 'email'
                 // scope: 'additional_scope'
             });
@@ -39,7 +39,7 @@
       <script>
         window.fbAsyncInit = function() {
           FB.init({
-            appId      : 'INSERT YOUR WEB APP CLIENT ID',
+            appId      : '{{f_client_id}}',
             cookie     : true,    // enable cookies to allow the server to
                                   // access the session
             xfbml      : true,    // parse social plugins on this page

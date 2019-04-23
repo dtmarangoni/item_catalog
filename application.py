@@ -20,7 +20,7 @@ from oauth_providers import oauth_disconnect
 
 # Create app
 app = Flask(__name__)
-app.config['DEBUG'] = True
+app.config['DEBUG'] = False
 
 # Using secrets module only available on Python 3.6 or above
 # state = ''.join(secrets.choice(string.ascii_uppercase + string.digits)
@@ -33,6 +33,14 @@ auth = HTTPBasicAuth()
 
 # Load the pre-defined DB categories.
 categories = db_session.query(Category).all()
+
+# Load the Oauth client IDs from JSON file
+client_secrets_file = json.loads(
+    open('./static/json/google_client_secrets.json', 'r').read())
+g_client_id = client_secrets_file['web']['client_id']
+client_secrets_file = json.loads(
+    open('./static/json/facebook_client_secrets.json', 'r').read())
+f_client_id = client_secrets_file['web']['app_id']
 
 
 @app.teardown_appcontext
@@ -222,7 +230,10 @@ def item_json(category, item):
 def site_login():
     """Route for login page or to process site login form submission."""
     if request.method == 'GET':
-        return render_template('login.html', categories=categories)
+        return render_template('login.html',
+                               categories=categories,
+                               g_client_id=g_client_id,
+                               f_client_id=f_client_id)
     elif request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
