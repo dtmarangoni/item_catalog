@@ -1,4 +1,5 @@
 import sys
-sys.path.insert(0, '/vagrant/item_catalog')
+# Use the path of your project here
+sys.path.insert(0, '/home/grader/item_catalog/')
 
 from application import app as application

@@ -11,6 +11,7 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import json
 import requests
+import os
 
 from database import db_session, User
 
@@ -33,8 +34,9 @@ def oauth_google(code):
     if code:
         try:
             # Upgrade the auth code for a credentials object
-            oauth_flow = flow_from_clientsecrets(
-                './static/json/google_client_secrets.json', scope='')
+            folder_path = os.path.dirname(os.path.abspath(__file__))
+            file_path = folder_path + '/static/json/google_client_secrets.json'
+            oauth_flow = flow_from_clientsecrets(file_path, scope='')
             oauth_flow.redirect_uri = 'postmessage'
             credentials = oauth_flow.step2_exchange(code)
         except FlowExchangeError:
@@ -93,10 +95,11 @@ def oauth_facebook(access_token):
             picture; and the oauth token.
             Format: {'user': ..., 'token': ...}
     """
-    client_secret_file = json.loads(
-        open('./static/json/facebook_client_secrets.json', 'r').read())
-    app_id = client_secret_file['web']['app_id']
-    app_secret = client_secret_file['web']['app_secret']
+    folder_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = folder_path + '/static/json/facebook_client_secrets.json'
+    client_secrets = json.loads(open(file_path, 'r').read())
+    app_id = client_secrets['web']['app_id']
+    app_secret = client_secrets['web']['app_secret']
 
     # Exchange for a token
     url = 'https://graph.facebook.com/oauth/access_token'

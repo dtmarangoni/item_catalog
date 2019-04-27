@@ -35,12 +35,11 @@ auth = HTTPBasicAuth()
 categories = db_session.query(Category).all()
 
 # Load the Oauth client IDs from JSON file
-client_secrets_file = json.loads(
-    open('./static/json/google_client_secrets.json', 'r').read())
-g_client_id = client_secrets_file['web']['client_id']
-client_secrets_file = json.loads(
-    open('./static/json/facebook_client_secrets.json', 'r').read())
-f_client_id = client_secrets_file['web']['app_id']
+with app.open_resource('./static/json/google_client_secrets.json') as f:
+    g_client_id = json.load(f)['web']['client_id']
+
+with app.open_resource('./static/json/facebook_client_secrets.json') as f:
+    f_client_id = json.load(f)['web']['app_id']
 
 
 @app.teardown_appcontext
@@ -241,7 +240,7 @@ def site_login():
             return redirect(url_for('catalog'))
         else:
             flash('Invalid username and/or login.')
-            return redirect(url_for('login'))
+            return redirect(url_for('site_login'))
 
 
 @app.route('/catalog/oauth_login/<string:provider>', methods=['POST'])
@@ -380,4 +379,4 @@ def verify_password(username_or_token, password):
 
 if __name__ == '__main__':
     """Running from command line starts the Flask application."""
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=80)
