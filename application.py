@@ -379,4 +379,4 @@ def verify_password(username_or_token, password):
 
 if __name__ == '__main__':
     """Running from command line starts the Flask application."""
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=5000)

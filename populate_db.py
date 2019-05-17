@@ -2,6 +2,8 @@
 #
 """Module to populate database with example info."""
 
+import json
+
 from database import db_session, User, Category, Item
 
 
@@ -14,88 +16,95 @@ def populate_db():
                 picture='mypicture')
     user.hash_password('123456')
     db_session.add(user)
-    db_session.commit()
 
-    category = Category(name='Soccer')
-    db_session.add(category)
-    db_session.commit()
-    category = Category(name='Basketball')
-    db_session.add(category)
-    db_session.commit()
-    category = Category(name='Baseball')
-    db_session.add(category)
-    db_session.commit()
-    category = Category(name='Frisbee')
-    db_session.add(category)
-    db_session.commit()
-    category = Category(name='Snowboarding')
-    db_session.add(category)
-    db_session.commit()
-    category = Category(name='Rock Climbing')
-    db_session.add(category)
-    db_session.commit()
-    category = Category(name='Foosball')
-    db_session.add(category)
-    db_session.commit()
-    category = Category(name='Skating')
-    db_session.add(category)
-    db_session.commit()
-    category = Category(name='Hockey')
-    db_session.add(category)
-    db_session.commit()
+    catalog_json = json.loads("""
+        {"Catalog": 
+            [{"Item":
+                [{"category_id": 1,
+                  "description": "An inflated ball used in playing soccer.",
+                  "id": 2,
+                  "name": "Soccer ball",
+                  "user_id": 1
+                  },
+                 {"category_id": 1,
+                  "description": "Item of clothing worn on the feet and often covering the ankle or part of the calf.",
+                  "id": 3,
+                  "name": "Socks",
+                  "user_id": 1
+                  }],
+              "id": 1,
+              "category": "Soccer"
+              },
+             {"Item": [],
+              "id": 2,
+              "category": "Basketball"
+              },
+             {"Item":
+                 [{"category_id": 3,
+                   "description": "A smooth wooden or metal club used to hit the ball after it's thrown by the pitcher",
+                   "id": 4,
+                   "name": "Bat",
+                   "user_id": 1
+                   }],
+              "id": 3,
+              "category": "Baseball"
+              },
+             {"Item":
+                [{"category_id": 4,
+                  "description": "A frisbee disc with size of 175 gram disc.",
+                  "id": 6,
+                  "name": "Disc",
+                  "user_id": 1
+                  }],
+              "id": 4,
+              "category": "Frisbee"
+              },
+             {"Item":
+                [{"category_id": 5,
+                  "description": "Best for any terrain conditions",
+                  "id": 1,
+                  "name": "Snowboard",
+                  "user_id": 1
+                  }],
+              "id": 5,
+              "category": "Snowboarding"
+              },
+             {"Item": [],
+              "id": 6,
+              "category": "Rock Climbing"
+              },
+             {"Item": [],
+              "id": 7,
+              "category": "Foosball"
+              },
+             {"Item": [],
+              "id": 8,
+              "category": "Skating"
+              },
+             {"Item":
+                [{"category_id": 9,
+                  "description": "Made with metal blades attached underfoot and used to propel the bearer across a sheet of ice while ice skating.",
+                  "id": 5,
+                  "name":
+                  "Hockey Skates",
+                  "user_id": 1
+                  }],
+              "id": 9,
+              "category": "Hockey"
+              }]
+         }""")
 
-    category = db_session.query(Category).filter_by(name='Snowboarding').one()
-    item = Item(name='Snowboard',
-                description='Best for any terrain conditions',
-                category_id=category.id,
-                user_id=user.id)
-    db_session.add(item)
-    db_session.commit()
+    for c in catalog_json['Catalog']:
+        category = Category(id=c['id'], name=c['category'])
+        db_session.add(category)
+        for i in c['Item']:
+            item = Item(id=i['id'], name=i['name'],
+                        description=i['description'],
+                        category_id=i['category_id'],
+                        user_id=i['user_id'])
+            db_session.add(item)
 
-    category = db_session.query(Category).filter_by(name='Soccer').one()
-    item = Item(name='Soccer ball',
-                description='An inflated ball used in playing soccer.',
-                category_id=category.id,
-                user_id=user.id)
-    db_session.add(item)
     db_session.commit()
-
-    category = db_session.query(Category).filter_by(name='Soccer').one()
-    item = Item(name='Socks',
-                description='Item of clothing worn on the feet and often '
-                            'covering the ankle or some part of the calf.',
-                category_id=category.id,
-                user_id=user.id)
-    db_session.add(item)
-    db_session.commit()
-
-    category = db_session.query(Category).filter_by(name='Baseball').one()
-    item = Item(name='Bat',
-                description='A smooth wooden or metal club used to hit the '
-                            'ball after it is thrown by the pitcher.',
-                category_id=category.id,
-                user_id=user.id)
-    db_session.add(item)
-    db_session.commit()
-
-    category = db_session.query(Category).filter_by(name='Hockey').one()
-    item = Item(name='Hockey Skates',
-                description='Made with metal blades attached underfoot and '
-                            'used to propel the bearer across a sheet of ice '
-                            'while ice skating.',
-                category_id=category.id,
-                user_id=user.id)
-    db_session.add(item)
-    db_session.commit()
-
-    category = db_session.query(Category).filter_by(name='Frisbee').one()
-    item = Item(name='Disc',
-                description='A frisbee disc with size of 175 gram disc.',
-                category_id=category.id,
-                user_id=user.id)
-    db_session.add(item)
-    db_session.commit()
-
     print('Database populated.')
 
 
