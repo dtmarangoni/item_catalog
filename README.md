@@ -9,7 +9,8 @@ Registered users will have the ability to post, edit and delete their own items.
 
 Third party user authentication implemented with Google and Facebook.
 
-Technologies envolved: HTML, CSS, Bootstrap, Python, Flask, SQLAlchemy and OAuth authentication.
+Technologies involved: HTML, CSS, Bootstrap, Python, Flask, SQLAlchemy and 
+OAuth authentication.
 
 
 ## Requirements
@@ -46,36 +47,40 @@ In order to run this app you will need:
 
 1 - Get the Linux VM up and access it. Then navigate to the project folder.
 
-2 - Create the PostgreSQL database user:
+2 - Create the PostgreSQL database:
+
+`sudo su postgres -c 'createdb item_catalog'`
+
+3 - Create the PostgreSQL database user:
 
 `sudo su postgres -c "psql -c \"CREATE USER catalog PASSWORD 
 'icproject';\""`
 
-3 - Create the database tables:
+4 - Create the database tables:
 
 `python3 database.py`
 
-4 - Populate the database with some example categories initial data:
+5 - Populate the database with some example categories initial data:
 
 `python3 populate_db.py`
 
-5 - Make sure you have both Facebook and Google JSON client secrets files 
+6 - Make sure you have both Facebook and Google JSON client secrets files 
 inside of folder below. It must contain your web app information from developers site:
 
 `static/json`
 
-6 - The Facebook and Google JSON files must have these names:
+7 - The Facebook and Google JSON files must have these names:
 
 `facebook_client_secrets.json` and `google_client_secrets.json`
 
-7 - Inside the project folder, run the command below to start the app:
+8 - Inside the project folder, run the command below to start the app:
 
 `python3 application.py`
 
-8 - The python commands above must be run in the Linux VM environment and 
+9 - The python commands above must be run in the Linux VM environment and 
 inside the project folder.
 
-9 - Now access from your browser the web site:
+10 - Now access from your browser the web site:
 
 `http://localhost:5000`
 

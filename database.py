@@ -7,7 +7,7 @@ tables. This is necessary for initial DB startup.
 """
 
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session, sessionmaker, relationship
+from sqlalchemy.orm import scoped_session, sessionmaker, relationship, backref
 from sqlalchemy import create_engine, Column, ForeignKey, Integer, String
 from passlib.apps import custom_app_context as pswd_context
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -151,7 +151,8 @@ class Item(Base):
     name = Column(String(100), nullable=False, index=True)
     description = Column(String(500))
     category_id = Column(Integer, ForeignKey('category.id'), nullable=False)
-    category = relationship(Category)
+    category = relationship(
+        Category, backref=backref('category', cascade="all, delete-orphan"))
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     user = relationship(User)
 
