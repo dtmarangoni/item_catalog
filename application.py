@@ -6,16 +6,16 @@ The app will interact with Database through SQLAlchemy. And with oauth
 providers through project defined functions in oauth_providers module.
 """
 
-from flask import Flask, render_template, jsonify, request
-from flask import g, session, flash, make_response, redirect, url_for
+from flask import (Flask, render_template, jsonify, request, g, session,
+                   flash, make_response, redirect, url_for)
 from flask_httpauth import HTTPBasicAuth
 import random
 import string
 import json
 
 from database import db_session, User, Category, Item
-from oauth_providers import oauth_google, oauth_facebook, register_oauth_user
-from oauth_providers import oauth_disconnect
+from oauth_providers import (oauth_google, oauth_facebook,
+                             register_oauth_user, oauth_disconnect)
 
 
 # Create app

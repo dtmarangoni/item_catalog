@@ -10,8 +10,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship, backref
 from sqlalchemy import create_engine, Column, ForeignKey, Integer, String
 from passlib.apps import custom_app_context as pswd_context
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from itsdangerous import BadSignature, SignatureExpired
+from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer,
+                          BadSignature, SignatureExpired)
 import random
 import string
 

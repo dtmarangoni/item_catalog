@@ -6,9 +6,8 @@ It includes:
     registering of oauth provider user in database.
 """
 
-from flask import make_response, g, session
-from oauth2client.client import flow_from_clientsecrets
-from oauth2client.client import FlowExchangeError
+from flask import make_response, session
+from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 import json
 import requests
 import os
