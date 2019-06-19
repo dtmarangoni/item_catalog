@@ -16,7 +16,7 @@
       <h4 class="display-5 dark_gray-font">{{category}}</h4>
     </div>
     <div class="col-auto m-3">
-      {% if session.get('user_id') %}
+      {% if g.user %}
         <a class="btn text-white font-weight-bold orange-bg" href="{{url_for('add_item', category=category)}}">Add</a>
       {% endif %}
     </div>
@@ -35,7 +35,7 @@
               <p class="card-text text-center text-danger font-weight-bold">{{item.name}}</p>
             </a>
           </div>
-            {% if (session.get('user_id')) and (session.get('user_id') == item.user_id) %}
+            {% if (g.user) and (g.user.id == item.user_id) %}
               <div class="card-footer m-0 p-0 text-center medium_gray-bg">
                 <a href="{{url_for('edit_item', category=category, item=item.name)}}"
                    class="btn btn-sm btn-link text-white font-weight-bold">Edit</a>

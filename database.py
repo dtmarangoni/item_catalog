@@ -48,6 +48,9 @@ class User(Base):
     password_hash = Column(String())
     email = Column(String(60), nullable=False, unique=True, index=True)
     picture = Column(String(250))
+    provider = Column(String(32))
+    oauth_user_id = Column(String(32))
+    oauth_token = Column(String())
 
     def hash_password(self, password):
         """Hash the user password and stores in password_hash attribute.
@@ -72,7 +75,7 @@ class User(Base):
         """Generate an authentication token.
 
         Args:
-            expiration (int): the token experitation time in seconds.
+            expiration (int): the token expiration time in seconds.
             Default value is 600.
 
         Returns:

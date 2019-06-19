@@ -6,7 +6,7 @@ It includes:
     registering of oauth provider user in database.
 """
 
-from flask import make_response, session
+from flask import g, jsonify
 from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 import json
 import requests
@@ -25,9 +25,12 @@ def oauth_google(code):
         code (str): one time Google OAuth code.
 
     Returns:
-        A dictionary with: The user's Google account info: name, email and
-            picture; and the oauth token.
+        A dictionary with: The user's Google account info: name, email,
+        picture and user id; and the oauth token.
             Format: {'user': ..., 'token': ...}
+
+        In case of failure, an error message and status code is returned.
+            Format: {'error': ..., 'status': ...}
     """
     # Exchange for a token
     if code:
@@ -39,15 +42,15 @@ def oauth_google(code):
             oauth_flow.redirect_uri = 'postmessage'
             credentials = oauth_flow.step2_exchange(code)
         except FlowExchangeError:
-            response = make_response(json.dumps('Failed to upgrade the '
-                                                'authorization code'), 401)
-            response.headers['Content-Type'] = 'application/json'
-            return response
+            return {
+                'error': 'Failed to upgrade the authorization code.',
+                'status': 401
+            }
     else:
-        response = make_response(json.dumps('No authorization code '
-                                            'received from client'), 401)
-        response.headers['Content-Type'] = 'application/json'
-        return response
+        return {
+            'error': 'No authorization code received from client.',
+            'status': 401
+        }
 
     # Check that the access token is valid.
     url = 'https://www.googleapis.com/oauth2/v1/tokeninfo?'
@@ -56,11 +59,10 @@ def oauth_google(code):
         result = requests.get(url, params=params)
         result.raise_for_status()
     except requests.exceptions.HTTPError:
-        response = make_response(json.dumps('Error with the access '
-                                            'token:\n' + result.json()),
-                                 result.status_code)
-        response.headers['Content-Type'] = 'application/json'
-        return response
+        return {
+            'error': 'Error with the access token:\n{}'.format(result.json()),
+            'status': result.status_code
+        }
 
     # Get user info
     url = "https://www.googleapis.com/oauth2/v1/userinfo"
@@ -69,11 +71,10 @@ def oauth_google(code):
         result = requests.get(url, params=params)
         result.raise_for_status()
     except requests.exceptions.HTTPError:
-        response = make_response(json.dumps('Error getting user info:\n'
-                                            + result.json()),
-                                 result.status_code)
-        response.headers['Content-Type'] = 'application/json'
-        return response
+        return {
+            'error': 'Error getting user info:\n{}'.format(result.json()),
+            'status': result.status_code
+        }
 
     # Return the user data and auth token compiled together in a dict
     data = {'user': result.json(), 'token': credentials.access_token}
@@ -90,9 +91,12 @@ def oauth_facebook(access_token):
         access_token (str): one time Facebook OAuth token.
 
     Returns:
-        A dictionary with: The user's Facebook account info: name, email and
-            picture; and the oauth token.
+        A dictionary with: The user's Facebook account info: name, email,
+        picture and user id; and the oauth token.
             Format: {'user': ..., 'token': ...}
+
+        In case of failure, an error message and status code is returned.
+            Format: {'error': ..., 'status': ...}
     """
     folder_path = os.path.dirname(os.path.abspath(__file__))
     file_path = folder_path + '/static/json/facebook_client_secrets.json'
@@ -111,9 +115,10 @@ def oauth_facebook(access_token):
 
     # If there was an error in the access token info, abort.
     if result.get('error') is not None:
-        response = make_response(json.dumps(result.get('error')), 401)
-        response.headers['Content-Type'] = 'application/json'
-        return response
+        return {
+            'error': result.get('error'),
+            'status': 401
+        }
 
     # Use token to get user info from API
     token = result.get('access_token')
@@ -137,30 +142,34 @@ def oauth_disconnect():
     """Revoke the oauth and user's token and reset their login session.
 
     Returns:
-        bool: True for success, False otherwise.
-        str: Information about the success or the error.
+        A dictionary with: success or error message and the status code.
+            Format: {'logout': ..., 'status': ...} or
+            Format: {'error': ..., 'status': ...}
     """
-    if not session['oauth_user_id']:
-        response = 'Current user not connected.'
-        return False, response
+    if not g.user.provider:
+        return jsonify(error='Current user not connected.'), 401
 
     result = {}
-    if session['provider'] == 'google':
+    if g.user.provider == 'google':
         url = 'https://accounts.google.com/o/oauth2/revoke'
-        params = {'token': session['oauth_token'], 'alt': 'json'}
+        params = {'token': g.user.oauth_token, 'alt': 'json'}
         result = requests.get(url, params=params).json()
-    elif session['provider'] == 'facebook':
-        facebook_id = session['oauth_user_id']
+    elif g.user.provider == 'facebook':
+        facebook_id = g.user.oauth_user_id
         url = 'https://graph.facebook.com/%s/permissions?access_token=%s'\
-              % (facebook_id, session['oauth_token'])
+              % (facebook_id, g.user.oauth_token)
         result = requests.delete(url).json()
 
     if result.get('error') is None:
-        response = 'Successfully disconnected.'
-        return True, response
+        return {
+            'logout': 'Successfully disconnected',
+            'status': 200
+        }
     else:
-        response = 'Failed to revoke token for the given user.'
-        return False, response
+        return {
+            'error': result.get('error'),
+            'status': 500
+        }
 
 
 def register_oauth_user(user):
@@ -169,18 +178,26 @@ def register_oauth_user(user):
     If its a new user, he/she will be registered and also returned.
 
     Args:
-        user (database.User): the user database model.
+        user (database.User): the user object database model.
 
     Returns:
         A registered or selected user from database.
     """
     old_user = db_session.query(User).filter_by(email=user.email).first()
     if not old_user:
-        new_user = User(username=user.username, email=user.email,
-                        picture=user.picture)
-        new_user.hash_password("")
-        db_session.add(new_user)
+        user.hash_password("")
+        db_session.add(user)
         db_session.commit()
-        return new_user
+        return user
     else:
+        # Updating DB fields in case the values has changed since user
+        # registration
+        old_user.username = user.username
+        old_user.email = user.email
+        old_user.picture = user.picture
+        old_user.provider = user.provider
+        old_user.oauth_user_id = user.oauth_user_id
+        old_user.oauth_token = user.oauth_token
+        db_session.add(old_user)
+        db_session.commit()
         return old_user

@@ -1,5 +1,9 @@
 {% extends "main.html" %}
 
+{% block meta_head %}
+  <script src="{{url_for('static', filename='js/forms.js')}}"></script>
+{% endblock %}
+
 {% block title %}Sign up{% endblock %}
 
 {% block header %}
